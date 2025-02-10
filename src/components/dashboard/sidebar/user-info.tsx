@@ -23,9 +23,9 @@ function UserInfo({ user }: { user: User | null }) {
                 {user?.firstName} {user?.lastName}
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col gap-y-1">
+            <div className="flex flex-col gap-y-1  ">
               {user?.firstName} {user?.lastName}
-              <span className="text-muted-foreground">
+              <span className="text-muted-foreground ">
                 {user?.emailAddresses[0].emailAddress}
               </span>
               <span className="w-fit">
