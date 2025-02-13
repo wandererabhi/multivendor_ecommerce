@@ -37,6 +37,11 @@ export const upsertCategory = async (category: Categories) => {
           {
             OR: [{ name: category.name }, { url: category.url }],
           },
+          {
+            NOT: {
+              id: category.id,
+            },
+          },
         ],
       },
     });
@@ -62,7 +67,75 @@ export const upsertCategory = async (category: Categories) => {
     });
     return categoryDetails;
   } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error:---", error.stack);
+    }
     console.log(error);
     throw error;
   }
+};
+
+// Function: getAllCategoriesForCategory
+// Description: Retrieves all SubCategories fro a category from the database.
+// Permission Level: Public
+// Returns: Array of subCategories of category sorted by updatedAt date in descending order.
+
+export const getAllCategories = async () => {
+  //Retrieve all categories from the database
+  const categories = await db.categories.findMany({
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+  return categories;
+};
+
+// Function: getCategory
+// Description: Retrieves a specific category from the database.
+// Access Level: Public
+// Parameters:
+//   - categoryId: The ID of the category to be retrieved.
+// Returns: Details of the requested category.
+export const getCategory = async (categoryId: string) => {
+  // Ensure category ID is provided
+  if (!categoryId) throw new Error("Please provide category ID.");
+
+  // Retrieve category
+  const category = await db.categories.findUnique({
+    where: {
+      id: categoryId,
+    },
+  });
+  return category;
+};
+
+// Function: deleteCategory
+// Description: Deletes a category from the database.
+// Permission Level: Admin only
+// Parameters:
+//   - categoryId: The ID of the category to be deleted.
+// Returns: Response indicating success or failure of the deletion operation.
+export const deleteCategory = async (categoryId: string) => {
+  // Get current user
+  const user = await currentUser();
+
+  // Check if user is authenticated
+  if (!user) throw new Error("Unauthenticated.");
+
+  // Verify admin permission
+  if (user.privateMetadata.role !== "ADMIN")
+    throw new Error(
+      "Unauthorized Access: Admin Privileges Required for Entry."
+    );
+
+  // Ensure category ID is provided
+  if (!categoryId) throw new Error("Please provide category ID.");
+
+  // Delete category from the database
+  const response = await db.categories.delete({
+    where: {
+      id: categoryId,
+    },
+  });
+  return response;
 };

@@ -19,7 +19,6 @@ interface ImageUploadProps {
   type: "standard" | "profile" | "cover";
   dontShowPreview?: boolean;
   error?: boolean;
-  cloudinary_key: string;
 }
 
 const ImageUpload: FC<ImageUploadProps> = ({
@@ -30,7 +29,6 @@ const ImageUpload: FC<ImageUploadProps> = ({
   type,
   dontShowPreview,
   error,
-  cloudinary_key,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -56,7 +54,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
         //     "animate-pulse": isBouncing,
         //   }
         // )}
-        className="relative  rounded-full w-52 h-52  inset-x-96  bg-gray-200 border-2 border-white shadow-2xl "
+        className="relative  rounded-full w-52 h-52   bg-gray-200 border-2 border-white shadow-2xl "
       >
         {value.length > 0 && (
           <Image
@@ -67,7 +65,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
             className="w-52 h-52 rounded-full object-cover absolute top-0 left-0 bottom-0 right-0"
           />
         )}
-        <CldUploadWidget onSuccess={onUpload} uploadPreset={cloudinary_key}>
+        <CldUploadWidget onSuccess={onUpload} uploadPreset="nxpaya3c">
           {({ open }) => {
             const onClick = () => {
               open();
